@@ -1,0 +1,483 @@
+openapi: 3.0.3
+info:
+  title: Doc API Picrew
+  description: Picrew v1
+  version: 1.0.11
+servers:
+  - url: https://api.dev.picrew.me
+paths:
+  /profile/mpa/signup:
+    post:
+      tags:
+        - Signup
+      summary: member signup
+      description: ''
+      operationId: membersignup
+      requestBody:
+        description: signup
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - activation_key
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                activation_key:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  member_status_id:
+                    type: integer
+                    example: '20'
+                  bookmark_limit:
+                    type: integer
+                    example: '20'
+                  mpa_status_id:
+                    type: integer
+                    example: '20'
+                  id:
+                    type: integer
+                    example: '20'
+
+        '500':
+          description: Server internal
+  /auth/login:
+    post:
+      tags:
+        - Login
+      summary: Login
+      description: ''
+      operationId: Login
+      requestBody:
+        description: Login
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                remember:
+                  type: boolean
+                password:
+                  type: string
+
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'message'
+
+
+        '500':
+          description: Server internal
+  /auth/{provider_name}/redirect_url:
+    get:
+      tags:
+        - Login
+      summary: Login SNS
+      description: ''
+      operationId: Login SNS URL
+      parameters:
+        - name: provider_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    example: 'url'
+
+
+        '500':
+          description: Server internal
+  /auth/{provider_name}/callback:
+    get:
+      tags:
+        - Login
+      summary: Login SNS Callback
+      description: ''
+      operationId: Login SNS Callback
+      parameters:
+        - name: provider_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: query_string
+          in: query
+          required: false
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    example: 'url'
+        '500':
+          description: Server internal
+  /auth/logout:
+    post:
+      tags:
+        - Logout
+      summary: Logout
+      description: ''
+      operationId: Logout
+      security:
+        - xsrfToken: []
+        - xHttp: []
+        - picrewSession: []
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'message'
+        '500':
+          description: Server internal
+  /profile/mpa/signup/send_activation_mail:
+    post:
+      tags:
+        - Signup
+      summary: signup
+      description: ''
+      operationId: signup
+      requestBody:
+        description: signup
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OK
+        '500':
+          description: Server internal
+  /profile/mpa/signup/value_check:
+    post:
+      tags:
+        - Signup
+      summary: signup
+      description: ''
+      operationId: signup1
+      requestBody:
+        description: signup
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - creator_name
+                - password
+              properties:
+                email:
+                  type: string
+                creator_name:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OK
+        '422':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        items:
+                          example: "string"
+                      creator_name:
+                        type: array
+                        items:
+                          example: "string"
+                      password:
+                        type: array
+                        items:
+                          example: "string"
+        '500':
+          description: Server internal
+  /profile:
+    get:
+      tags:
+        - Profile
+      summary: profile
+      description: ''
+      operationId: profile
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 11
+                  creator_name:
+                    type: array
+                    items:
+                      example: "string"
+                  member_status_id:
+                    type: integer
+                    example: 20
+                  creator_status_id:
+                    type: integer
+                    example: 0
+                  mpa_status_id:
+                    type: integer
+                    example: 20
+                  bookmark_limit:
+                    type: integer
+                    example: 20
+        '500':
+          description: Server internal
+  /profile/mypage:
+    get:
+      tags:
+        - Mypage
+      summary: mypage
+      description: ''
+      operationId: mypage
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  creator_name:
+                    type: string
+                    example: null
+                  member_status_id:
+                    type: integer
+                    example: 20
+                  creator_status_id:
+                    type: integer
+                    example: 0
+                  mpa_status_id:
+                    type: integer
+                    example: 20
+                  bookmark_limit:
+                    type: integer
+                    example: 20
+                  email:
+                    type: string
+                    example: test@gmail.com
+                  social_list:
+                    type: object
+                    properties:
+                      apple:
+                        type: integer
+                        items:
+                          example: 0
+                      google:
+                        type: integer
+                        items:
+                          example: 0
+                      facebook:
+                        type: integer
+                        items:
+                          example: 0
+        '500':
+          description: Server internal
+  /profile/creator/{creatorAttribute}:
+    put:
+      tags:
+        - Profile
+      summary: profile creator
+      description: ''
+      operationId: profile creator
+      parameters:
+        - name: creatorAttribute
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: profile creator
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                activation_key:
+                  type: integer
+                password:
+                  type: string
+                creator_name:
+                  type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  creator_name:
+                    type: string
+                    example: manhtt
+                  member_status_id:
+                    type: integer
+                    example: 20
+                  creator_status_id:
+                    type: integer
+                    example: 0
+                  mpa_status_id:
+                    type: integer
+                    example: 20
+                  bookmark_limit:
+                    type: integer
+                    example: 20
+                  email:
+                    type: string
+                    example: test@gmail.com
+                  social_list:
+                    type: object
+                    properties:
+                      apple:
+                        type: integer
+                        items:
+                          example: 0
+                      google:
+                        type: integer
+                        items:
+                          example: 0
+                      facebook:
+                        type: integer
+                        items:
+                          example: 0
+        '403':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reason:
+                    type: integer
+                  message:
+                    type: string
+        '422':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        items:
+                          example: "string"
+                      creator_name:
+                        type: array
+                        items:
+                          example: "string"
+                      password:
+                        type: array
+                        items:
+                          example: "string"
+        '500':
+          description: Server internal
+
+components:
+  securitySchemes:
+    xsrfToken:
+      type: apiKey
+      name: X-XSRF-TOKEN
+      in: header
+    xHttp:
+      type: apiKey
+      name: X-Requested-With
+      in: header
+    picrewSession:
+      type: apiKey
+      name: picrew_session
+      in: header 
